@@ -1,8 +1,8 @@
 {
-    "name": "laravel/laravel",
+    "name": "petar-v-nikolov/laravel-simple-blog-api",
     "type": "project",
-    "description": "The Laravel Framework.",
-    "keywords": ["framework", "laravel"],
+    "description": "Laravel 10 REST starter kit for a simple blog API with Sanctum authentication.",
+    "keywords": ["laravel", "blog", "api", "sanctum"],
     "license": "MIT",
     "require": {
         "php": "^8.1",

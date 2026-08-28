@@ -1,66 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Laravel Simple Blog API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A small **Laravel 10** REST starter for a blog: Sanctum token auth, categories, and posts. It is meant as a teaching/demo kit, not a production CMS.
 
-## About Laravel
+## What you get
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- `POST /api/register`, `POST /api/login`, `POST /api/logout`
+- Public, paginated `GET /api/posts` (published posts only, optional `?category=` slug filter)
+- Public `GET /api/posts/{slug}` (published only)
+- Authenticated `POST` / `PUT` / `DELETE` for posts and categories
+- Public `GET /api/categories`
+- Seeded demo user, two categories, four published posts, and one draft
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Requirements
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.1 or 8.2
+- Composer
+- SQLite (tests) or MySQL (local/Docker)
 
-## Learning Laravel
+This project stays on **Laravel 10**. It is not upgraded to Laravel 11/12.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Install
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```bash
+git clone https://github.com/Petar-V-Nikolov/laravel-simple-blog-api.git
+cd laravel-simple-blog-api
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+The API is served under `/api` (Laravel’s default prefix). After seeding, you can log in as:
 
-## Laravel Sponsors
+- email: `api@example.com`
+- password: `password`
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Example requests
 
-### Premium Partners
+Login and copy the `token` from the JSON body:
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+```bash
+curl -X POST http://127.0.0.1:8000/api/login \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -d '{"email":"api@example.com","password":"password"}'
+```
 
-## Contributing
+List published posts:
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+curl http://127.0.0.1:8000/api/posts \
+  -H "Accept: application/json"
+```
 
-## Code of Conduct
+Create a post (replace `TOKEN`):
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+curl -X POST http://127.0.0.1:8000/api/posts \
+  -H "Accept: application/json" \
+  -H "Content-Type: application/json" \
+  -H "Authorization: Bearer TOKEN" \
+  -d '{"title":"My post","excerpt":"A short summary","body":"The full text","status":"published"}'
+```
 
-## Security Vulnerabilities
+Filter by category slug:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+curl "http://127.0.0.1:8000/api/posts?category=laravel" \
+  -H "Accept: application/json"
+```
+
+## Docker (optional)
+
+A `docker-compose.yml` is included (Nginx on port **8080**, MySQL, PHP-FPM). It is optional and a bit larger than this API needs (Meilisearch, Mailpit, and Selenium are leftover services and unused by the blog endpoints).
+
+If you use Compose, point the app at the `mysql` service:
+
+```env
+DB_CONNECTION=mysql
+DB_HOST=mysql
+DB_DATABASE=laravel_simple_blog_api
+DB_USERNAME=root
+DB_PASSWORD=secret
+```
+
+Then:
+
+```bash
+docker compose up -d --build
+docker compose exec app composer install
+docker compose exec app php artisan key:generate
+docker compose exec app php artisan migrate --seed
+```
+
+The API will be at `http://localhost:8080/api`.
+
+## Tests
+
+```bash
+php artisan test
+```
+
+CI runs the same command on PHP 8.2 (see `.github/workflows/tests.yml`). Tests use SQLite in memory and an `APP_KEY` from `phpunit.xml`.
+
+## Limitations
+
+- Laravel 10 only — no upgrade path is maintained here.
+- No comments, tags, media uploads, or roles/permissions.
+- Any authenticated user may create, update, or delete any post or category (MVP; there is no owner-only policy).
+- CORS uses Laravel’s default `config/cors.php` (including `allowed_origins` of `*`). Tighten that before exposing the API to browsers in production.
+- No email verification, password reset, or rate-limit customization beyond Laravel defaults.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+MIT © 2026 Petar Nikolov / PN Scripts
