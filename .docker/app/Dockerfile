@@ -1,4 +1,4 @@
-FROM php:8.1.0-fpm
+FROM php:8.3-fpm
 ARG user
 ARG uid
 # Install Dependencies

@@ -1,6 +1,6 @@
 # Laravel Simple Blog API
 
-A small **Laravel 10** REST starter for a blog: Sanctum token auth, categories, and posts. It is meant as a teaching/demo kit, not a production CMS.
+A small **Laravel 13** REST starter for a blog: Sanctum token auth, categories, and posts. It is meant as a teaching/demo kit, not a production CMS.
 
 ## What you get
 
@@ -13,11 +13,9 @@ A small **Laravel 10** REST starter for a blog: Sanctum token auth, categories, 
 
 ## Requirements
 
-- PHP 8.1 or 8.2
+- PHP 8.3+
 - Composer
-- SQLite (tests) or MySQL (local/Docker)
-
-This project stays on **Laravel 10**. It is not upgraded to Laravel 11/12.
+- SQLite (default / tests) or MySQL (local/Docker)
 
 ## Install
 
@@ -27,6 +25,7 @@ cd laravel-simple-blog-api
 composer install
 cp .env.example .env
 php artisan key:generate
+touch database/database.sqlite
 php artisan migrate --seed
 php artisan serve
 ```
@@ -73,7 +72,7 @@ curl "http://127.0.0.1:8000/api/posts?category=laravel" \
 
 ## Docker (optional)
 
-A `docker-compose.yml` is included (Nginx on port **8080**, MySQL, PHP-FPM). It is optional and a bit larger than this API needs (Meilisearch, Mailpit, and Selenium are leftover services and unused by the blog endpoints).
+A `docker-compose.yml` is included (Nginx on port **8080**, MySQL, PHP-FPM). It is optional.
 
 If you use Compose, point the app at the `mysql` service:
 
@@ -102,14 +101,13 @@ The API will be at `http://localhost:8080/api`.
 php artisan test
 ```
 
-CI runs the same command on PHP 8.2 (see `.github/workflows/tests.yml`). Tests use SQLite in memory and an `APP_KEY` from `phpunit.xml`.
+CI runs the same command on PHP 8.3 (see `.github/workflows/tests.yml`). Tests use SQLite in memory and an `APP_KEY` from `phpunit.xml`.
 
 ## Limitations
 
-- Laravel 10 only — no upgrade path is maintained here.
 - No comments, tags, media uploads, or roles/permissions.
 - Any authenticated user may create, update, or delete any post or category (MVP; there is no owner-only policy).
-- CORS uses Laravel’s default `config/cors.php` (including `allowed_origins` of `*`). Tighten that before exposing the API to browsers in production.
+- CORS uses Laravel’s default allow-list. Tighten that before exposing the API to browsers in production.
 - No email verification, password reset, or rate-limit customization beyond Laravel defaults.
 
 ## License

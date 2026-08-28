@@ -52,7 +52,7 @@ class DatabaseSeeder extends Seeder
             'title' => 'Why PHP still works for APIs',
             'slug' => 'why-php-still-works-for-apis',
             'excerpt' => 'A short note on PHP and JSON APIs.',
-            'body' => 'This starter keeps the stack small: Laravel 10, Eloquent, and token auth.',
+            'body' => 'This starter keeps the stack small: Laravel 13, Eloquent, and token auth.',
         ]);
 
         Post::factory()->published()->create([
