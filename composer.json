@@ -1,6 +1,6 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "petar-v-nikolov/laravel-simple-blog-api",
+    "name": "pnscripts/laravel-simple-blog-api",
     "type": "project",
     "description": "Laravel 13 REST starter kit for a simple blog API with Sanctum authentication.",
     "keywords": ["laravel", "blog", "api", "sanctum"],

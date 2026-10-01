@@ -20,7 +20,7 @@ A small **Laravel 13** REST starter for a blog: Sanctum token auth, categories, 
 ## Install
 
 ```bash
-git clone https://github.com/Petar-V-Nikolov/laravel-simple-blog-api.git
+git clone https://github.com/petar-v-nikolov/laravel-simple-blog-api.git
 cd laravel-simple-blog-api
 composer install
 cp .env.example .env
