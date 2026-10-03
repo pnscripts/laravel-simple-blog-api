@@ -1,5 +1,7 @@
 # Laravel Simple Blog API
 
+> **Archived (2026-10-03).** No longer maintained by PN Scripts; kept read-only for reference.
+
 A small **Laravel 13** REST starter for a blog: Sanctum token auth, categories, and posts. It is meant as a teaching/demo kit, not a production CMS.
 
 ## What you get
